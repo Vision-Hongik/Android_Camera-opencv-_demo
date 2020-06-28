@@ -1,11 +1,8 @@
 package com.example.vision;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
-
 import androidx.appcompat.app.AlertDialog;
-
 import android.content.DialogInterface;
 import android.annotation.TargetApi;
 import android.content.pm.PackageManager;
@@ -78,11 +75,11 @@ public class CameraActivity extends AppCompatActivity
         mOpenCvCameraView = (CameraBridgeViewBase)findViewById(R.id.activity_surface_view_c);
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
         mOpenCvCameraView.setCvCameraViewListener(this);
-        mOpenCvCameraView.setCameraIndex(0); // front-camera(1),  back-camera(0)
+        mOpenCvCameraView.setCameraIndex(2); // front-camera(1),  back-camera(0) 광각(2)
 
     }
 
-    //----------------------------Activity func----------------------------
+    //----------------------------Activity Life-cycle func----------------------------
     @Override
     public void onPause()
     {
@@ -113,6 +110,7 @@ public class CameraActivity extends AppCompatActivity
             mOpenCvCameraView.disableView();
     }
 
+    //------------------------------ openCv callback Func ------------------------------
     @Override
     public void onCameraViewStarted(int width, int height) {
 
@@ -123,6 +121,8 @@ public class CameraActivity extends AppCompatActivity
 
     }
 
+    // 카메라 시작시 frame 조작!
+    // 회색으로 바꿨다.
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
 

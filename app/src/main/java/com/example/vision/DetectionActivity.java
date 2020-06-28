@@ -55,8 +55,6 @@ public class DetectionActivity extends AppCompatActivity
     private CameraBridgeViewBase mOpenCvCameraView;
 
     // assets directory의 mobileNet_SSD의 file 정보를 받아오기위한 함수
-    // OutputStream을 통해 storage/emulated에 저장해 놓는듯, 마치 임시 file같은 느낌인가?
-    // file을 copy해 앱이 돌아가는 동안 가상의 file에 복사해 놓는듯.. return값은 가상의 file의 경로.
     private static String copyFile(String filename, Context context) {
         String baseDir = Environment.getExternalStorageDirectory().getPath();
         String pathDir = baseDir + File.separator + filename;
@@ -120,7 +118,7 @@ public class DetectionActivity extends AppCompatActivity
         mOpenCvCameraView = (CameraBridgeViewBase)findViewById(R.id.activity_surface_view);
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
         mOpenCvCameraView.setCvCameraViewListener(this);
-        mOpenCvCameraView.setCameraIndex(0); // front-camera(1),  back-camera(0)
+        mOpenCvCameraView.setCameraIndex(2); // front-camera(1),  back-camera(0) 광각(2)
     }
 
     @Override
