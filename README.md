@@ -10,5 +10,5 @@ Activity
 Requirement Android Studio
 -------------------------------------------
 > * OpenCv Sdk : https://github.com/opencv/opencv/releases
-> * ndk 20.0.5594570
+> * ndk ver 20.0.5594570
 > * cMake 
