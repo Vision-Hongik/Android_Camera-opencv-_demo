@@ -7,7 +7,7 @@ Activity
 > * OpenCv Deep Neural Net
 <br><br>
 
-Requirement
+Requirement Android Studio
 -------------------------------------------
 > * OpenCv Sdk : https://github.com/opencv/opencv/releases
 > * ndk 20.0.5594570
