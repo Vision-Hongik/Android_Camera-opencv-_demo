@@ -3,7 +3,7 @@
 Activity
 ------------------------------------------
 > * GPS
-> * OpenCv Camera
+> * OpenCv Camera and Submit OpenCv Mat->Array! to HTTP_Server
 > * OpenCv Deep Neural Net
 <br><br>
 
