@@ -1,6 +1,8 @@
 package com.example.vision;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.graphics.Camera;
 import android.os.Bundle;
 import androidx.appcompat.app.AlertDialog;
 import android.content.DialogInterface;
@@ -10,12 +12,19 @@ import android.os.Build;
 import android.util.Log;
 import android.view.SurfaceView;
 import android.view.WindowManager;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
+
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfInt;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,18 +37,20 @@ public class CameraActivity extends AppCompatActivity
     private static final String TAG = "opencv";
     private Mat matInput;
     private Mat matResult;
-
+    private boolean sentFlag = false;
+    private Response.Listener<String> responseListener;
+    private RequestQueue queue;
+    private byte [] matArray;
+    private long mat_size;
     private CameraBridgeViewBase mOpenCvCameraView;
 
     public native void ConvertRGBtoGray(long matAddrInput, long matAddrResult);
-
+    public native void converToArray(long matAddr, byte [] array);
 
     static {
         System.loadLibrary("opencv_java4");
         System.loadLibrary("native-lib");
     }
-
-
 
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
         @Override
@@ -62,6 +73,15 @@ public class CameraActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        responseListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.e(TAG, "onResponse: " + response );
+            }
+        };
+        queue = Volley.newRequestQueue(CameraActivity.this);
+        mat_size = 0;
 
         // Screan 조절
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -128,8 +148,24 @@ public class CameraActivity extends AppCompatActivity
 
         matInput = inputFrame.rgba();
 
-        if ( matResult == null )
+        // 카메라 화질크기 변화에 따라 재할당, 그외에는 재사용.
+        if(mat_size != matInput.total()) {
+            mat_size = matInput.total();
+            matArray = new byte[(int)mat_size];
+        }
 
+        converToArray(matInput.getNativeObjAddr(),matArray);
+        Log.e(TAG, "Frame byte size: "+matInput.total());
+        Log.e(TAG, "0: " + (byte)matInput.get(0,0)[0]);
+        Log.e(TAG, "onCameraFrame: "+ Arrays.toString(matArray));
+
+        if(!sentFlag) {
+            // Arrays.toString(matArray)를 보내면, opencv Data Byte array를 String으로 변환시켜 보냄.
+            MatRequest matRequest = new MatRequest(matInput.toString(), responseListener);
+            queue.add(matRequest);
+            sentFlag = true; // 한번만 보내려고!
+        }
+        if ( matResult == null )
             matResult = new Mat(matInput.rows(), matInput.cols(), matInput.type());
 
         ConvertRGBtoGray(matInput.getNativeObjAddr(), matResult.getNativeObjAddr());
