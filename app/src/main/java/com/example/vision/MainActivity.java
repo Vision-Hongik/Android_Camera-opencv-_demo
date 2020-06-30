@@ -12,6 +12,7 @@ public class MainActivity extends AppCompatActivity {
     private Button gpsButton;
     private Button cameraButton;
     private Button detectButton;
+    private Button submitButton;
     // Used to load the 'native-lib' library on application startup.
     static {
         System.loadLibrary("native-lib");
@@ -25,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         gpsButton = (Button) findViewById(R.id.gpsAct);
         cameraButton = (Button) findViewById(R.id.cameraAct);
         detectButton = (Button) findViewById(R.id.detectAct);
-
+        submitButton = (Button) findViewById(R.id.submitAct);
         // GPS page Intent
         gpsButton.setOnClickListener(new View.OnClickListener() {
 
@@ -55,11 +56,21 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);//액티비티 띄우기
             }
         });
+
+        // SUBMIT TO SERVER page Intent
+        submitButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),SubmitActivity.class);
+                startActivity(intent);//액티비티 띄우기
+            }
+        });
     }
 
     /**
      * A native method that is implemented by the 'native-lib' native library,
      * which is packaged with this application.
      */
-    public native String stringFromJNI();
+    //public native String stringFromJNI();
 }
